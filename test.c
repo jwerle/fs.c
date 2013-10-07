@@ -23,14 +23,14 @@
  * rmdir
  * mkdir
  * readdir
- * close
- * open
+ * -close
+ * -open
  * utimes
  * futimes
  * fsync
  * write
- * read
- * readFile
+ * -read
+ * -readFile
  * writeFile
  * appendFile
  * watchFile
@@ -46,19 +46,17 @@ int
 main (int argc, char *argv[]) {
   int rc, i = 0;
   FILE *fd;
+  char *buf;
 
   fd = fs_open("./tmp/file", "rw");
 
   assert(fd);
 
-  // just to be sure ;)
-  assert(26 == strlen(alpha));
-
   assert(fs_stat("./tmp"));
   assert(fs_lstat("./tmp/file.link"));
   assert(fs_fstat(fd));
 
-  char *buf = fs_fread(fd);
+  buf = fs_fread(fd);
   assert(0 == strcmp(alpha, buf));
   assert(0 == strcmp(fs_read("./tmp/file"), buf));
   assert(0 == strcmp(fs_read("./tmp/file.link"), fs_read("./tmp/file")));
@@ -76,6 +74,9 @@ main (int argc, char *argv[]) {
 
   rc = fs_rename("./tmp.bak", "./tmp");
   assert(0 == rc);
+  assert(0 == fs_close(fd));
+
+  fs_write("./tmp/biz", "");
 
 
   return 0;

@@ -186,6 +186,45 @@ char *
 fs_fnread (FILE *file, int len);
 
 
+/**
+ * Writes a buffer
+ * to a given file path
+ */
+
+int
+fs_write (char *path, char *buffer);
+
+
+/**
+ * Writes `n` bytes of a buffer to a given
+ * file path
+ */
+
+int
+fs_nwrite (char *path, char *buffer, int len);
+
+
+/**
+ * Writes a buffer to a given
+ * file stream
+ */
+
+int
+fs_fwrite (FILE *file, char *buffer);
+
+
+/**
+ * Writes `n` bytes of a buffer
+ * to a given file stream
+ */
+
+int
+fs_fnwrite (FILE *file, char *buffer, int len);
+
+
+
+
+
 
 // IMPLEMENTATION
 
@@ -330,5 +369,27 @@ fs_fnread (FILE *file, int len) {
 }
 
 
+int
+fs_write (char *path, char *buffer) {
+  return fs_nwrite(path, buffer, strlen(buffer));
+}
+
+
+int
+fs_nwrite (char *path, char *buffer, int len) {
+  return fs_fnwrite(fs_open(path, "w"), buffer, len);
+}
+
+
+int
+fs_fwrite (FILE *file, char *buffer) {
+  return fs_fnwrite(file, buffer, strlen(buffer));
+}
+
+
+int
+fs_fnwrite (FILE *file, char *buffer, int len) {
+  return (int) fwrite(buffer, 1, len, file);
+}
 
 #endif
