@@ -1,0 +1,23 @@
+{
+  "name": "fs.h",
+  "version": "0.0.1",
+  "description": "File system API much like Node's fs module",
+  "main": "fs.h",
+  "repo": "jwerle/fs.h",
+  "src": ["fs.h"],
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:jwerle/fs.h.git"
+  },
+  "keywords": [
+    "fs"
+  ],
+  "author": "Joseph Werle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jwerle/fs.h/issues"
+  }
+}
