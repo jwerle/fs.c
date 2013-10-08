@@ -76,7 +76,8 @@ main (int argc, char *argv[]) {
   assert(0 == rc);
   assert(0 == fs_close(fd));
 
-  fs_write("./tmp/biz", "");
+  fs_write("./tmp/biz", alpha);
+  printf("%d\n", strcmp(alpha, fs_read("./tmp/biz")));
 
 
   return 0;
