@@ -222,7 +222,22 @@ int
 fs_fnwrite (FILE *file, char *buffer, int len);
 
 
+/**
+ * Makes a directory and returns 0
+ * on success or -1 on failure
+ */
 
+int
+fs_mkdir (char *path, int mode);
+
+
+/**
+ * Removes a directory and returns
+ * 0 on success and -1 on failure
+ */
+
+int
+fs_rmdir (char *path);
 
 
 
@@ -390,6 +405,18 @@ fs_fwrite (FILE *file, char *buffer) {
 int
 fs_fnwrite (FILE *file, char *buffer, int len) {
   return (int) fwrite(buffer, 1, len, file);
+}
+
+
+int
+fs_mkdir (char *path, int mode) {
+  return mkdir(path, (mode_t) mode);
+}
+
+
+int
+fs_rmdir (char *path) {
+  return rmdir(path);
 }
 
 #endif

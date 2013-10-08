@@ -79,6 +79,8 @@ main (int argc, char *argv[]) {
   fs_write("./tmp/biz", alpha);
   printf("%d\n", strcmp(alpha, fs_read("./tmp/biz")));
 
+  assert(0 == fs_mkdir("./tmp/dir", S_IRWXU));
+  assert(0 == fs_rmdir("./tmp/dir"));
 
   return 0;
 }
