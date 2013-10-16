@@ -12,6 +12,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <dirent.h>
 #include <string.h>
 #include <sys/types.h>
@@ -239,6 +240,11 @@ fs_mkdir (char *path, int mode);
 int
 fs_rmdir (char *path);
 
+/**
+ * Check if the given `path` exists
+ */
+bool
+fs_exists (char *path);
 
 
 // IMPLEMENTATION
@@ -417,6 +423,12 @@ fs_mkdir (char *path, int mode) {
 int
 fs_rmdir (char *path) {
   return rmdir(path);
+}
+
+bool
+fs_exists (char *path) {
+  struct stat b;
+  return 0 == (stat(path, &b));
 }
 
 #endif
