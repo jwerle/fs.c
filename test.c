@@ -82,5 +82,12 @@ main (int argc, char *argv[]) {
   assert(0 == fs_mkdir("./tmp/dir", S_IRWXU));
   assert(0 == fs_rmdir("./tmp/dir"));
 
+  assert(0 == fs_exists("./tmp"));
+  assert(-1 == fs_exists("./nope"));
+
+  fs_write("./tmp/1", "hello world");
+  assert(0 == fs_exists("./tmp/1"));
+  assert(-1 == fs_exists("./tmp/2"));
+
   return 0;
 }

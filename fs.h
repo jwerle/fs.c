@@ -239,6 +239,12 @@ fs_mkdir (char *path, int mode);
 int
 fs_rmdir (char *path);
 
+/**
+ * Check if the given `path` exists
+ */
+
+int
+fs_exists (char *path);
 
 
 // IMPLEMENTATION
@@ -417,6 +423,12 @@ fs_mkdir (char *path, int mode) {
 int
 fs_rmdir (char *path) {
   return rmdir(path);
+}
+
+int
+fs_exists (char *path) {
+  struct stat b;
+  return stat(path, &b);
 }
 
 #endif
