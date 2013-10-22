@@ -339,6 +339,7 @@ size_t
 fs_size (char *path) {
   size_t size;
   FILE *file = fs_open(path, "r");
+  if (NULL == file) return -1;
   fseek(file, 0, SEEK_END);
   size = ftell(file);
   fs_close(file);
@@ -361,13 +362,17 @@ fs_fsize (FILE *file) {
 char *
 fs_read (char *path) {
   FILE *file = fs_open(path, "r");
-  return fs_fread(file);
+  if (NULL == file) return NULL;
+  char *data = fs_fread(file);
+  fclose(file);
+  return data;
 }
 
 
 char *
 fs_nread (char *path, int len) {
   FILE *file = fs_open(path, "r");
+  if (NULL == file) return NULL;
   char *buffer = fs_fnread(file, len);
   fs_close(file);
   return buffer;
@@ -398,7 +403,11 @@ fs_write (char *path, char *buffer) {
 
 int
 fs_nwrite (char *path, char *buffer, int len) {
-  return fs_fnwrite(fs_open(path, "w"), buffer, len);
+  FILE *file = fs_open(path, "w");
+  if (NULL == file) return -1;
+  int result = fs_fnwrite(file, buffer, len);
+  fclose(file);
+  return result;
 }
 
 
