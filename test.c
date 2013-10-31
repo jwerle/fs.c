@@ -1,6 +1,10 @@
 
-#include "fs.h"
 #include <assert.h>
+#include <stdio.h>
+#include <string.h>
+
+
+#include "fs.h"
 
 /**
  * -rename
