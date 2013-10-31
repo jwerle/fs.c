@@ -50,7 +50,7 @@ int
 main (int argc, char *argv[]) {
   char *data = fs_read("./tmp/hello");
   assert(data);
-  assert(0 == strcmp("hey\njwerle\ni\nthink\ni\nfound\na\nbug!\n", data));
+  assert(0 == strcmp("hey\njwerle\ni\nthink\ni\nfound\na\nbug!", data));
 
   int rc, i = 0;
   FILE *fd;
