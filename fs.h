@@ -21,7 +21,7 @@ typedef struct stat fs_stats;
  */
 
 void
-fs_error (char *prefix);
+fs_error (const char *prefix);
 
 
 /**
@@ -30,7 +30,7 @@ fs_error (char *prefix);
  */
 
 FILE *
-fs_open (char *path, char *flags);
+fs_open (const char *path, const char *flags);
 
 
 /**
@@ -46,7 +46,7 @@ fs_close (FILE *file);
  */
 
 int
-fs_rename (char *from, char *to);
+fs_rename (const char *from, const char *to);
 
 
 /**
@@ -55,7 +55,7 @@ fs_rename (char *from, char *to);
  */
 
 fs_stats *
-fs_stat (char *path);
+fs_stat (const char *path);
 
 
 /**
@@ -71,7 +71,7 @@ fs_fstat (FILE *file);
  */
 
 fs_stats *
-fs_lstat (char *path);
+fs_lstat (const char *path);
 
 
 /**
@@ -89,7 +89,7 @@ fs_ftruncate (FILE *file, int len);
  */
 
 int
-fs_truncate (char *path, int len);
+fs_truncate (const char *path, int len);
 
 
 /**
@@ -99,7 +99,7 @@ fs_truncate (char *path, int len);
  */
 
 int
-fs_chown (char *path, int uid, int gid);
+fs_chown (const char *path, int uid, int gid);
 
 
 /**
@@ -118,7 +118,7 @@ fs_fchown (FILE *file, int uid, int gid);
  */
 
 size_t
-fs_size (char *path);
+fs_size (const char *path);
 
 
 /**
@@ -137,7 +137,7 @@ fs_fsize (FILE *file);
  */
 
 int
-fs_lchown (char *path, int uid, int gid);
+fs_lchown (const char *path, int uid, int gid);
 
 
 /**
@@ -146,7 +146,7 @@ fs_lchown (char *path, int uid, int gid);
  */
 
 char *
-fs_read (char *path);
+fs_read (const char *path);
 
 
 /**
@@ -156,7 +156,7 @@ fs_read (char *path);
  */
 
 char *
-fs_nread (char *path, int len);
+fs_nread (const char *path, int len);
 
 
 /**
@@ -184,7 +184,7 @@ fs_fnread (FILE *file, int len);
  */
 
 int
-fs_write (char *path, char *buffer);
+fs_write (const char *path, const char *buffer);
 
 
 /**
@@ -193,7 +193,7 @@ fs_write (char *path, char *buffer);
  */
 
 int
-fs_nwrite (char *path, char *buffer, int len);
+fs_nwrite (const char *path, const char *buffer, int len);
 
 
 /**
@@ -202,7 +202,7 @@ fs_nwrite (char *path, char *buffer, int len);
  */
 
 int
-fs_fwrite (FILE *file, char *buffer);
+fs_fwrite (FILE *file, const char *buffer);
 
 
 /**
@@ -211,7 +211,7 @@ fs_fwrite (FILE *file, char *buffer);
  */
 
 int
-fs_fnwrite (FILE *file, char *buffer, int len);
+fs_fnwrite (FILE *file, const char *buffer, int len);
 
 
 /**
@@ -220,7 +220,7 @@ fs_fnwrite (FILE *file, char *buffer, int len);
  */
 
 int
-fs_mkdir (char *path, int mode);
+fs_mkdir (const char *path, int mode);
 
 
 /**
@@ -229,14 +229,14 @@ fs_mkdir (char *path, int mode);
  */
 
 int
-fs_rmdir (char *path);
+fs_rmdir (const char *path);
 
 /**
  * Check if the given `path` exists
  */
 
 int
-fs_exists (char *path);
+fs_exists (const char *path);
 
 
 #endif

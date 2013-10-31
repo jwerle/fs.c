@@ -19,7 +19,7 @@
 
 
 void
-fs_error (char *prefix) {
+fs_error (const char *prefix) {
   char fmt[256];
   sprintf(fmt, "fs: %s: error", prefix);
   perror(fmt);
@@ -27,7 +27,7 @@ fs_error (char *prefix) {
 
 
 FILE *
-fs_open (char *path, char *flags) {
+fs_open (const char *path, const char *flags) {
   return fopen(path, flags);
 }
 
@@ -39,13 +39,13 @@ fs_close (FILE *file) {
 
 
 int
-fs_rename (char *from, char *to) {
+fs_rename (const char *from, const char *to) {
   return rename(from, to);
 }
 
 
 fs_stats *
-fs_stat (char *path) {
+fs_stat (const char *path) {
   fs_stats *stats = malloc(sizeof(fs_stats));
   int e = stat(path, stats);
   if (-1 == e) return NULL;
@@ -64,7 +64,7 @@ fs_fstat (FILE *file) {
 
 
 fs_stats *
-fs_lstat (char *path) {
+fs_lstat (const char *path) {
   fs_stats *stats = malloc(sizeof(fs_stats));
   int e = lstat(path, stats);
   if (-1 ==e) return NULL;
@@ -80,13 +80,13 @@ fs_ftruncate (FILE *file, int len) {
 
 
 int
-fs_truncate (char *path, int len) {
+fs_truncate (const char *path, int len) {
   return truncate(path, (off_t) len);
 }
 
 
 int
-fs_chown (char *path, int uid, int gid) {
+fs_chown (const char *path, int uid, int gid) {
   return chown(path, (uid_t) uid, (gid_t) gid);
 }
 
@@ -99,13 +99,13 @@ fs_fchown (FILE *file, int uid, int gid) {
 
 
 int
-fs_lchown (char *path, int uid, int gid) {
+fs_lchown (const char *path, int uid, int gid) {
   return lchown(path, (uid_t) uid, (gid_t) gid);
 }
 
 
 size_t
-fs_size (char *path) {
+fs_size (const char *path) {
   size_t size;
   FILE *file = fs_open(path, "r");
   if (NULL == file) return -1;
@@ -129,7 +129,7 @@ fs_fsize (FILE *file) {
 
 
 char *
-fs_read (char *path) {
+fs_read (const char *path) {
   FILE *file = fs_open(path, "r");
   if (NULL == file) return NULL;
   char *data = fs_fread(file);
@@ -139,7 +139,7 @@ fs_read (char *path) {
 
 
 char *
-fs_nread (char *path, int len) {
+fs_nread (const char *path, int len) {
   FILE *file = fs_open(path, "r");
   if (NULL == file) return NULL;
   char *buffer = fs_fnread(file, len);
@@ -165,13 +165,13 @@ fs_fnread (FILE *file, int len) {
 
 
 int
-fs_write (char *path, char *buffer) {
+fs_write (const char *path, const char *buffer) {
   return fs_nwrite(path, buffer, strlen(buffer));
 }
 
 
 int
-fs_nwrite (char *path, char *buffer, int len) {
+fs_nwrite (const char *path, const char *buffer, int len) {
   FILE *file = fs_open(path, "w");
   if (NULL == file) return -1;
   int result = fs_fnwrite(file, buffer, len);
@@ -181,31 +181,31 @@ fs_nwrite (char *path, char *buffer, int len) {
 
 
 int
-fs_fwrite (FILE *file, char *buffer) {
+fs_fwrite (FILE *file, const char *buffer) {
   return fs_fnwrite(file, buffer, strlen(buffer));
 }
 
 
 int
-fs_fnwrite (FILE *file, char *buffer, int len) {
+fs_fnwrite (FILE *file, const char *buffer, int len) {
   return (int) fwrite(buffer, 1, len, file);
 }
 
 
 int
-fs_mkdir (char *path, int mode) {
+fs_mkdir (const char *path, int mode) {
   return mkdir(path, (mode_t) mode);
 }
 
 
 int
-fs_rmdir (char *path) {
+fs_rmdir (const char *path) {
   return rmdir(path);
 }
 
 
 int
-fs_exists (char *path) {
+fs_exists (const char *path) {
   struct stat b;
   return stat(path, &b);
 }
