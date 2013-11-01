@@ -1,3 +1,4 @@
+
 /**
  * fs.c
  *
@@ -13,8 +14,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
-
-
 #include "fs.h"
 
 
@@ -209,3 +208,4 @@ fs_exists (const char *path) {
   struct stat b;
   return stat(path, &b);
 }
+
