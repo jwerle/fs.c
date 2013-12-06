@@ -47,8 +47,11 @@ fs_stats *
 fs_stat (const char *path) {
   fs_stats *stats = malloc(sizeof(fs_stats));
   int e = stat(path, stats);
-  if (-1 == e) return NULL;
-  else return stats;
+  if (-1 == e) {
+    free(stats);
+    return NULL;
+  }
+  return stats;
 }
 
 
@@ -57,8 +60,11 @@ fs_fstat (FILE *file) {
   fs_stats *stats = malloc(sizeof(fs_stats));
   int fd = fileno(file);
   int e = fstat(fd, stats);
-  if (-1 == e) return NULL;
-  else return stats;
+  if (-1 == e) {
+    free(stats);
+    return NULL;
+  }
+  return stats;
 }
 
 
@@ -66,8 +72,11 @@ fs_stats *
 fs_lstat (const char *path) {
   fs_stats *stats = malloc(sizeof(fs_stats));
   int e = lstat(path, stats);
-  if (-1 ==e) return NULL;
-  else return stats;
+  if (-1 == e) {
+    free(stats);
+    return NULL;
+  }
+  return stats;
 }
 
 
