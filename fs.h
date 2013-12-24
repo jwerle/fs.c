@@ -1,6 +1,5 @@
-
-#ifndef __FS_H__
-#define __FS_H__ 1
+#ifndef FS_H
+#define FS_H 1
 
 
 /**
