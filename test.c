@@ -44,7 +44,7 @@
  */
 
 
-char *alpha = "abcdefghijklmnopqrstuvwxyz";
+char *alpha = "abcdefghijklmnopqrstuvwxyz\n";
 
 int
 main (int argc, char *argv[]) {
