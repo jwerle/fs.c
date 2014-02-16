@@ -1,10 +1,170 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h> // unlink
 #include <string.h>
-
-
+#include <time.h>
 #include "fs.h"
+
+#define TEST(name) \
+  static void test_##name(void)
+
+#define RUN_TEST(test) \
+  test_count++; \
+  test_##test(); \
+  puts("  \e[92m✓ \e[90m" #test "\e[0m");
+
+static int test_count = 0;
+static char *alpha = "abcdefghijklmnopqrstuvwxyz\n";
+
+TEST (fs_open) {
+  FILE *fd;
+
+  fd = fs_open("./tmp/file", "rw");
+  assert(fd);
+  fs_close(fd);
+
+  fd = fs_open("/root/foo", "w");
+  assert(NULL == fd);
+}
+
+TEST (fs_close) {
+  FILE *fd = fs_open("./tmp/file", "rw");
+  assert(0 == fs_close(fd));
+}
+
+TEST (fs_mkdir) {
+  fs_rmdir("./tmp/dir");
+  fs_mkdir("./tmp/dir", 0777);
+  assert(0 == fs_exists("./tmp/dir"));
+  fs_rmdir("./tmp/dir");
+}
+
+TEST (fs_exists) {
+  assert(0 == fs_exists("./tmp/file"));
+  assert(0 == fs_exists("./tmp/file.link"));
+  assert(-1 == fs_exists("./tmp/a file that doesn't exist"));
+}
+
+TEST (fs_stat) {
+  fs_stats *s;
+  s = fs_stat("./tmp/file");
+  assert(s);
+  free(s);
+  assert(NULL == fs_stat("./tmp/a file that doesn't exist"));
+}
+
+TEST (fs_fstat) {
+  FILE *fd = fs_open("./tmp/file", "r");
+  assert(fd);
+
+  fs_stats *s = fs_fstat(fd);
+  assert(s);
+  free(s);
+
+  assert(NULL == fs_fstat(NULL));
+  fs_close(fd);
+}
+
+TEST (fs_lstat) {
+  fs_stats *s = fs_lstat("./tmp/file.link");
+  assert(s);
+  free(s);
+}
+
+TEST (fs_truncate) {
+  fs_write("./tmp/alpha", alpha);
+  assert(0 == fs_truncate("./tmp/alpha", 9));
+  char *buf = fs_read("./tmp/alpha");
+  assert(0 == strcmp(buf, "abcdefghi"));
+  free(buf);
+}
+
+TEST (fs_read) {
+  char *f1 = fs_read("./tmp/file");
+  char *f2 = fs_read("./tmp/file.link");
+  assert(0 == strcmp(f1, f2));
+  free(f1);
+  free(f2);
+
+  // GH-14
+  fs_write("./tmp/alpha", alpha);
+  char *buf = fs_read("./tmp/alpha");
+  assert(0 == strcmp(alpha, buf));
+  free(buf);
+}
+
+TEST (fs_nread) {
+  fs_write("./tmp/alpha", alpha);
+  char *buf = fs_nread("./tmp/alpha", 9);
+  assert(0 == strcmp(buf, "abcdefghi"));
+  free(buf);
+}
+
+TEST (fs_fread) {
+  fs_write("./tmp/alpha", alpha);
+  FILE *fd = fs_open("./tmp/alpha", "r");
+  assert(fd);
+  char *buf = fs_fread(fd);
+  assert(0 == strcmp(alpha, buf));
+  free(buf);
+  fs_close(fd);
+}
+
+TEST (fs_rename) {
+  fs_write("./tmp/alpha", alpha);
+  assert(0 == fs_rename("./tmp/alpha", "./tmp/foo"));
+  assert(-1 == fs_exists("./tmp/alpha"));
+  char *buf = fs_read("./tmp/foo");
+  assert(0 == strcmp(alpha, buf));
+  free(buf);
+  unlink("./tmp/foo");
+}
+
+TEST (fs_rmdir) {
+  assert(0 == fs_mkdir("./tmp/dir", 0777));
+  assert(0 == fs_rmdir("./tmp/dir"));
+  assert(-1 == fs_exists("./tmp/dir"));
+}
+
+TEST (fs_write) {
+  assert(fs_write("./tmp/alpha", alpha));
+  char *buf = fs_read("./tmp/alpha");
+  assert(0 == strcmp(alpha, buf));
+  free(buf);
+}
+
+TEST (fs_nwrite) {
+  assert(fs_nwrite("./tmp/alpha", alpha, 9));
+  char *buf = fs_read("./tmp/alpha");
+  assert(0 == strcmp(buf, "abcdefghi"));
+  free(buf);
+}
+
+TEST (fs_fwrite) {
+  FILE *fd = fs_open("./tmp/alpha", "w");
+  assert(fd);
+  fs_fwrite(fd, alpha);
+  fs_close(fd);
+
+  char *buf = fs_read("./tmp/alpha");
+  assert(0 == strcmp(buf, alpha));
+  free(buf);
+}
+
+TEST (fs_fnwrite) {
+  FILE *fd = fs_open("./tmp/alpha", "w");
+  assert(fd);
+  fs_fnwrite(fd, alpha, 9);
+  fs_close(fd);
+
+  char *buf = fs_read("./tmp/alpha");
+  assert(0 == strcmp(buf, "abcdefghi"));
+  free(buf);
+}
+
+
 
 /**
  * -rename
@@ -44,54 +204,33 @@
  */
 
 
-char *alpha = "abcdefghijklmnopqrstuvwxyz\n";
-
 int
-main (int argc, char *argv[]) {
-  int rc, i = 0;
-  FILE *fd;
-  char *buf;
+main () {
+  clock_t start = clock();
 
-  fd = fs_open("./tmp/file", "rw");
+  printf("\n");
 
-  assert(fd);
+  RUN_TEST(fs_open);
+  RUN_TEST(fs_close);
+  RUN_TEST(fs_mkdir);
+  RUN_TEST(fs_exists);
+  RUN_TEST(fs_stat);
+  RUN_TEST(fs_fstat);
+  RUN_TEST(fs_lstat);
+  RUN_TEST(fs_truncate);
+  RUN_TEST(fs_read);
+  RUN_TEST(fs_nread);
+  RUN_TEST(fs_fread);
+  RUN_TEST(fs_rename);
+  RUN_TEST(fs_rmdir);
+  RUN_TEST(fs_write);
+  RUN_TEST(fs_nwrite);
+  RUN_TEST(fs_fwrite);
+  RUN_TEST(fs_fnwrite);
 
-  assert(fs_stat("./tmp"));
-  assert(fs_lstat("./tmp/file.link"));
-  assert(fs_fstat(fd));
-
-  buf = fs_fread(fd);
-  assert(0 == strcmp(alpha, buf));
-  assert(0 == strcmp(fs_read("./tmp/file"), buf));
-  assert(0 == strcmp(fs_read("./tmp/file.link"), fs_read("./tmp/file")));
-
-  assert(strlen(alpha) == strlen(buf));
-
-  for (; i < strlen(alpha); ++i) {
-    assert(alpha[i] == buf[i]);
-  }
-
-  rc = fs_rename("./tmp", "./tmp.bak");
-
-  assert(0 == rc);
-  assert(fs_stat("./tmp.bak"));
-
-  rc = fs_rename("./tmp.bak", "./tmp");
-  assert(0 == rc);
-  assert(0 == fs_close(fd));
-
-  fs_write("./tmp/biz", alpha);
-  printf("%d\n", strcmp(alpha, fs_read("./tmp/biz")));
-
-  assert(0 == fs_mkdir("./tmp/dir", S_IRWXU));
-  assert(0 == fs_rmdir("./tmp/dir"));
-
-  assert(0 == fs_exists("./tmp"));
-  assert(-1 == fs_exists("./nope"));
-
-  fs_write("./tmp/1", "hello world");
-  assert(0 == fs_exists("./tmp/1"));
-  assert(-1 == fs_exists("./tmp/2"));
+  printf("\n  \e[90m%d tests passed in \e[32m%.5fs\e[0m\n\n"
+    , test_count
+    , (float) (clock() - start) / CLOCKS_PER_SEC);
 
   return 0;
 }
