@@ -57,6 +57,7 @@ fs_stat (const char *path) {
 
 fs_stats *
 fs_fstat (FILE *file) {
+  if (NULL == file) return NULL;
   fs_stats *stats = malloc(sizeof(fs_stats));
   int fd = fileno(file);
   int e = fstat(fd, stats);
