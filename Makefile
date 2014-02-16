@@ -1,6 +1,7 @@
 
 AR ?= ar
 CC ?= gcc
+PREFIX ?= /usr/local
 CFLAGS = -std=c99 -Wall -Wextra
 
 SRC = fs.c
