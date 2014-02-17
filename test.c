@@ -21,16 +21,16 @@ static char *alpha = "abcdefghijklmnopqrstuvwxyz\n";
 TEST (fs_open) {
   FILE *fd;
 
-  fd = fs_open("./tmp/file", "rw");
+  fd = fs_open("./tmp/file", FS_OPEN_READWRITE);
   assert(fd);
   fs_close(fd);
 
-  fd = fs_open("/root/foo", "w");
+  fd = fs_open("/root/foo", FS_OPEN_WRITE);
   assert(NULL == fd);
 }
 
 TEST (fs_close) {
-  FILE *fd = fs_open("./tmp/file", "rw");
+  FILE *fd = fs_open("./tmp/file", FS_OPEN_READWRITE);
   assert(0 == fs_close(fd));
 }
 
@@ -56,7 +56,7 @@ TEST (fs_stat) {
 }
 
 TEST (fs_fstat) {
-  FILE *fd = fs_open("./tmp/file", "r");
+  FILE *fd = fs_open("./tmp/file", FS_OPEN_READ);
   assert(fd);
 
   fs_stats *s = fs_fstat(fd);
@@ -82,6 +82,7 @@ TEST (fs_truncate) {
 }
 
 TEST (fs_read) {
+#ifndef _WIN32
   char *f1 = fs_read("./tmp/file");
   char *f2 = fs_read("./tmp/file.link");
   assert(0 == strcmp(f1, f2));
@@ -93,6 +94,7 @@ TEST (fs_read) {
   char *buf = fs_read("./tmp/alpha");
   assert(0 == strcmp(alpha, buf));
   free(buf);
+#endif
 }
 
 TEST (fs_nread) {
@@ -104,7 +106,7 @@ TEST (fs_nread) {
 
 TEST (fs_fread) {
   fs_write("./tmp/alpha", alpha);
-  FILE *fd = fs_open("./tmp/alpha", "r");
+  FILE *fd = fs_open("./tmp/alpha", FS_OPEN_READ);
   assert(fd);
   char *buf = fs_fread(fd);
   assert(0 == strcmp(alpha, buf));
@@ -143,18 +145,19 @@ TEST (fs_nwrite) {
 }
 
 TEST (fs_fwrite) {
-  FILE *fd = fs_open("./tmp/alpha", "w");
+  FILE *fd = fs_open("./tmp/alpha", FS_OPEN_WRITE);
   assert(fd);
   fs_fwrite(fd, alpha);
   fs_close(fd);
 
   char *buf = fs_read("./tmp/alpha");
+  printf("-%s-\n", buf);
   assert(0 == strcmp(buf, alpha));
   free(buf);
 }
 
 TEST (fs_fnwrite) {
-  FILE *fd = fs_open("./tmp/alpha", "w");
+  FILE *fd = fs_open("./tmp/alpha", FS_OPEN_WRITE);
   assert(fd);
   fs_fnwrite(fd, alpha, 9);
   fs_close(fd);
