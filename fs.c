@@ -17,7 +17,7 @@
 #include <fcntl.h>
 #include "fs.h"
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__MINGW32__)
 extern int fileno(FILE*);
 #endif
 
