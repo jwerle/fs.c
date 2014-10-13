@@ -196,8 +196,8 @@ fs_fread (FILE *file) {
 char *
 fs_fnread (FILE *file, int len) {
   char *buffer = (char*) malloc(sizeof(char) * (len + 1));
-  fread(buffer, 1, len, file);
-  buffer[len] = '\0';
+  size_t n = fread(buffer, 1, len, file);
+  buffer[n] = '\0';
   return buffer;
 }
 
