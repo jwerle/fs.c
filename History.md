@@ -1,4 +1,16 @@
 
+0.1.2 / 2014-10-13
+==================
+
+  * fs_fnread: cut buffer using actual read size
+  * Be compatible with a C++ compiler
+
+0.1.1 / 2014-06-26
+==================
+
+ * Makefile: Build with `__STRICT_ANSI__`
+ * Windows fix
+
 0.1.0 / 2014-02-18 
 ==================
 
