@@ -2,7 +2,7 @@
 AR ?= ar
 CC ?= gcc
 PREFIX ?= /usr/local
-CFLAGS = -std=c99 -Wall -Wextra -U__STRICT_ANSI__
+CFLAGS = -std=c99 -Wall -Wextra -D_BSD_SOURCE
 
 SRC = fs.c
 HEADERS = fs.h
