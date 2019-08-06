@@ -1,9 +1,10 @@
 {
-  "name": "@jwerle/fs.c",
+  "name": "fs",
   "version": "0.1.2",
   "description": "File system API much like Node's fs module",
+  "repo": "jwerle/fs.c",
+  "src": ["fs.h", "fs.c"],
   "scripts": {
-    "version": "./scripts/update-clib-json && git add clib.json",
     "test": "make test"
   },
   "repository": {
@@ -11,7 +12,7 @@
     "url": "git@github.com:jwerle/fs.c.git"
   },
   "keywords": [
-    "clib", "fs"
+    "fs", "filesystem", "file", "system"
   ],
   "author": "Joseph Werle",
   "license": "MIT",
