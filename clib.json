@@ -1,6 +1,6 @@
 {
   "name": "fs",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "File system API much like Node's fs module",
   "repo": "jwerle/fs.c",
   "src": [
