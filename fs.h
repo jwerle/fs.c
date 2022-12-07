@@ -22,7 +22,11 @@
 #define FS_OPEN_READWRITE "rw"
 #endif
 
-typedef struct stat fs_stats;
+#ifndef _WIN32
+    typedef struct stat fs_stats;
+#else
+    typedef struct _stat fs_stats;
+#endif
 
 
 

@@ -46,7 +46,11 @@ fs_rename (const char *from, const char *to) {
 fs_stats *
 fs_stat (const char *path) {
   fs_stats *stats = (fs_stats*) malloc(sizeof(fs_stats));
-  int e = stat(path, stats);
+  #ifndef _WIN32
+    int e = stat(path, stats);
+  #else
+    int e = _stat(path, stats);
+  #endif
   if (-1 == e) {
     free(stats);
     return NULL;
